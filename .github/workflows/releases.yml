@@ -33,7 +33,7 @@ jobs:
       - name: Prepare zip file
         run: |
           mkdir the-plugin-name
-          cp -r * ./the-plugin-name
+          cp -r !(the-plugin-name) the-plugin-name
           zip -r the-plugin-name.zip ./the-plugin-name
 
       - name: Upload to wp-api.indiv.nl
