@@ -21,8 +21,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x' # Specify the Node.js version
-          cache: 'npm'
-          cache-dependency-path: ./package.json
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Build for production
         run: npx mix --production
