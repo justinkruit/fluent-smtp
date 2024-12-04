@@ -1,0 +1,45 @@
+name: Build and Upload Workflow
+
+on:
+  push:
+    branches:
+      - master
+    # Run only if the commit message contains "release"
+    tags:
+      - '*'
+
+jobs:
+  build-and-upload:
+    if: contains(github.event.head_commit.message, 'release')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Specify the Node.js version
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for production
+        run: npx mix --production
+
+      - name: Prepare zip file
+        run: |
+          mkdir the-plugin-name
+          cp -r * ./the-plugin-name
+          zip -r the-plugin-name.zip ./the-plugin-name
+
+      - name: Upload to wp-api.indiv.nl
+        env:
+          API_USERNAME: ${{ secrets.API_USERNAME }} # Set this in your repository secrets
+          API_PASSWORD: ${{ secrets.API_PASSWORD }} # Set this in your repository secrets
+        run: |
+          curl \
+            -F "file=@the-plugin-name.zip" \
+            https://wp-api.indiv.nl/plugins/smtp/release.php
