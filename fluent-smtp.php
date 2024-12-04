@@ -16,6 +16,14 @@ Domain Path:  /language
 
 define('FLUENTMAIL_PLUGIN_FILE', __FILE__);
 
+require 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+$myUpdateChecker = PucFactory::buildUpdateChecker(
+  'https://wp-api.indiv.nl/plugins/smtp/plugin_data',
+  __FILE__, //Full path to the main plugin file or functions.php.
+  'fluent-smtp-indiv'
+);
+
 require_once plugin_dir_path(__FILE__) . 'boot.php';
 
 register_activation_hook(
