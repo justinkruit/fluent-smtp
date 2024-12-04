@@ -30,17 +30,26 @@ jobs:
       - name: Build for production
         run: npx mix --production
 
+      - name: Extract Stable Tag from readme.txt
+        id: extract_tag
+        run: |
+          # Extract the stable tag value from readme.txt
+          STABLE_TAG=$(grep -E '^Stable tag:' readme.txt | awk -F ': ' '{print $2}')
+          echo "STABLE_TAG=$STABLE_TAG" >> $GITHUB_ENV
+
       - name: Prepare zip file
         run: |
           mkdir the-plugin-name
-          rsync -av --exclude=the-plugin-name ./ ./the-plugin-name
+          rsync -aq --exclude=the-plugin-name --exclude=.git --exclude=.github --progress ./ ./the-plugin-name
           zip -r the-plugin-name.zip ./the-plugin-name
 
       - name: Upload to wp-api.indiv.nl
         env:
-          API_USERNAME: ${{ secrets.API_USERNAME }} # Set this in your repository secrets
-          API_PASSWORD: ${{ secrets.API_PASSWORD }} # Set this in your repository secrets
+          API_KEY: ${{ secrets.API_KEY }}
+          STABLE_TAG: ${{ env.STABLE_TAG }}
         run: |
           curl \
             -F "file=@the-plugin-name.zip" \
+          -F "stable_tag=${STABLE_TAG}" \
+          -F "api_key=${API_KEY}" \
             https://wp-api.indiv.nl/plugins/smtp/release.php
