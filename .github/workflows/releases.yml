@@ -38,8 +38,10 @@ jobs:
       - name: Prepare zip file
         run: |
           mkdir fluent-smtp-indiv
+          echo "Preparing the directory with rsync..."
           rsync -aq --exclude=fluent-smtp-indiv --exclude=.git --exclude=.github --progress ./ ./fluent-smtp-indiv
-          zip -r fluent-smtp-indiv.zip ./fluent-smtp-indiv
+          echo "Creating zip archive..."
+          zip -r -q fluent-smtp-indiv.zip ./fluent-smtp-indiv
 
       - name: Upload to wp-api.indiv.nl
         env:
@@ -47,7 +49,7 @@ jobs:
           STABLE_TAG: ${{ env.STABLE_TAG }}
         run: |
           curl \
-            -F "file=@the-plugin-name.zip" \
+            -F "file=@fluent-smtp-indiv.zip" \
           -F "stable_tag=${STABLE_TAG}" \
           -F "api_key=${API_KEY}" \
             https://wp-api.indiv.nl/plugins/smtp/release.php
