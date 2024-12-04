@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name:  FluentSMTP
+Plugin Name:  FluentSMTP [InDiv]
 Plugin URI:   https://fluentsmtp.com
 Description:  The Ultimate SMTP Connection Plugin for WordPress.
 Version:      2.2.83
