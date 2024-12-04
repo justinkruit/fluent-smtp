@@ -24,9 +24,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./package.json
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Build for production
         run: npx mix --production
 
@@ -39,9 +36,9 @@ jobs:
 
       - name: Prepare zip file
         run: |
-          mkdir the-plugin-name
-          rsync -aq --exclude=the-plugin-name --exclude=.git --exclude=.github --progress ./ ./the-plugin-name
-          zip -r the-plugin-name.zip ./the-plugin-name
+          mkdir fluent-smtp-indiv
+          rsync -aq --exclude=fluent-smtp-indiv --exclude=.git --exclude=.github --progress ./ ./fluent-smtp-indiv
+          zip -r fluent-smtp-indiv.zip ./fluent-smtp-indiv
 
       - name: Upload to wp-api.indiv.nl
         env:
